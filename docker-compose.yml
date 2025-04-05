@@ -1,0 +1,45 @@
+services:
+  back-end:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    container_name: pw_back-end
+    # ports:
+    #   - 8080:8080
+    #   - 5678:5678
+    expose:
+      - 8080
+    volumes:
+      - ./back-end/app:/src/app
+      - ./docs/openapi/public-api.openapi.yaml:/openapi.yaml
+    env_file:
+      - ./envs/local
+    command: [ "-start" ]
+    # command: [ "-start-debug" ]
+
+  nginx:
+    image: nginx:1.27
+    container_name: pw_nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/pw.conf
+      - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - back-end
+    restart: always
+
+  db:
+    image: postgres:17
+    container_name: pw_db
+    expose:
+      - 5432
+    env_file:
+      - ./envs/local
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
