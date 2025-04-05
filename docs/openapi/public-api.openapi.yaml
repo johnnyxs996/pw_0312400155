@@ -1,0 +1,1483 @@
+openapi: 3.0.0
+info:
+  title: UniPegaso Banking API
+  description: API for managing UniPegaso Banking financial system.
+  version: 1.0.0
+
+servers:
+  - url: https://localhost/api/v1
+
+paths:
+  /login:
+    post:
+      summary: Authenticate user
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginPost'
+        required: true
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+
+  /refresh:
+    post:
+      summary: Refresh access token
+      tags:
+        - Auth
+      security: []
+      parameters:
+        - name: refresh_token
+          in: query
+          description: Refresh token value
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDA1MzRkNS03YWFjLTRkZTItOWI5NS1mYzY1YjI2NWZjZjYiLCJpYXQiOjE3NDM4NjM5MzQsImV4cCI6MTc0Mzg2NTczNH0.5vBRno5WxCqO310HEpmPysZGPOnWfipu14c5pID3WBo
+      responses:
+        '200':
+          description: Successful refresh
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+
+  /logout:
+    post:
+      summary: Perform logout
+      tags:
+        - Auth
+      responses:
+        "200":
+          description: Logout message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged out successfully"
+
+  /banks:
+    get:
+      summary: List all banks
+      tags:
+        - Bank
+      responses:
+        '200':
+          description: A list of banks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BanksGet'
+    post:
+      summary: Create a bank
+      tags:
+        - Bank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BanksPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created bank
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /banks/{id}:
+    get:
+      summary: Get a bank
+      tags:
+        - Bank
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Bank details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update a bank
+      tags:
+        - Bank
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankPut'
+        required: true
+      responses:
+        '200':
+          description: Updated bank details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete a bank
+      tags:
+        - Bank
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Bank deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /userProfiles:
+    get:
+      summary: List all user profiles
+      tags:
+        - User Profile
+      responses:
+        '200':
+          description: A list of user profiles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfilesGet'
+    post:
+      summary: Create a user profile
+      tags:
+        - User Profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfilesPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created user profile
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /userProfiles/{id}:
+    get:
+      summary: Get a user profile
+      tags:
+        - User Profile
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: User profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update a user profile
+      tags:
+        - User Profile
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfilePut'
+        required: true
+      responses:
+        '200':
+          description: Updated user profile details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete a user profile
+      tags:
+        - User Profile
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: User profile deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /userProfiles/{id}/bankAccounts:
+    get:
+      summary: List all user bank accounts
+      tags:
+        - User Bank Account
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: A list of user bank accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountsGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    post:
+      summary: Create a bank account for the user
+      tags:
+        - User Bank Account
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created user bank account
+          $ref: '#/components/responses/ResourceCreationReponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /bankAccounts:
+    get:
+      summary: List all bank accounts
+      tags:
+        - Bank Account
+      responses:
+        '200':
+          description: A list of bank accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountsGet'
+
+  /bankAccounts/{id}:
+    get:
+      summary: Get a bank account
+      tags:
+        - Bank Account
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Bank account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update a bank account
+      tags:
+        - Bank Account
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankAccountPut'
+        required: true
+      responses:
+        '200':
+          description: Bank account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankAccountGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete a bank account
+      tags:
+        - Bank Account
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Bank account deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /transactions:
+    get:
+      summary: List all transactions
+      tags:
+        - Transaction
+      parameters:
+        - name: sourceAccountId
+          in: query
+          description: Search transactions by source Bank Account
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - name: destinationAccountId
+          in: query
+          description: Search transactions by destination Bank Account
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - name: involvedAccountId
+          in: query
+          description: Search transactions with a Bank Account involved as source or destination
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+      responses:
+        '200':
+          description: A list of transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsGet'
+    post:
+      summary: Create a transaction
+      tags:
+        - Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created transaction
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /transactions/{id}:
+    get:
+      summary: Get a transaction by ID
+      tags:
+        - Transaction
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /investmentProducts:
+    get:
+      summary: List all investment products
+      tags:
+        - Investment Product
+      responses:
+        '200':
+          description: A list of investment products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentProductsGet'
+    post:
+      summary: Create an investment product
+      tags:
+        - Investment Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentProductsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created investment product
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /investmentProducts/{id}:
+    get:
+      summary: Get an investment product
+      tags:
+        - Investment Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Investment Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update an investment product
+      tags:
+        - Investment Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentProductPut'
+        required: true
+      responses:
+        '200':
+          description: Updated investment product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete an investment product
+      tags:
+        - Investment Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Investment product deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /investments:
+    get:
+      summary: List all investments
+      tags:
+        - Investment
+      parameters:
+        - name: bankAccountId
+          in: query
+          description: Search investments by Bank Account
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+      responses:
+        '200':
+          description: A list of investments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentsGet'
+    post:
+      summary: Create an investment
+      tags:
+        - Investment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created investment
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /investments/{id}:
+    get:
+      summary: Get an investment
+      tags:
+        - Investment
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Investment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvestmentGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /investments/{id}/action:
+    post:
+      summary: Perform an action on an investment
+      tags:
+        - Investment
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentActionPost'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionPostSuccessResponse'
+        '400':
+          $ref: '#/components/responses/ActionPostBadRequestResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /loanProducts:
+    get:
+      summary: List all loan products
+      tags:
+        - Loan Product
+      responses:
+        '200':
+          description: A list of loan products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanProductsGet'
+    post:
+      summary: Create a loan product
+      tags:
+        - Loan Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanProductsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created loan product
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /loanProducts/{id}:
+    get:
+      summary: Get a loan product
+      tags:
+        - Loan Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Loan Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update a loan product
+      tags:
+        - Loan Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanProductPut'
+        required: true
+      responses:
+        '200':
+          description: Updated loan product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete a loan product
+      tags:
+        - Loan Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Loan product deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /loans:
+    get:
+      summary: List all loans
+      tags:
+        - Loan
+      parameters:
+        - name: bankAccountId
+          in: query
+          description: Search loans by Bank Account
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+      responses:
+        '200':
+          description: A list of loans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoansGet'
+    post:
+      summary: Create a loan
+      tags:
+        - Loan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoansPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created loan
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /loans/{id}:
+    get:
+      summary: Get a loan
+      tags:
+        - Loan
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Loan details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /insurancePolicyProducts:
+    get:
+      summary: List all insurance policy products
+      tags:
+        - Insurance Policy Product
+      responses:
+        '200':
+          description: A list of insurance policy products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsurancePolicyProductsGet'
+    post:
+      summary: Create an insurance policy product
+      tags:
+        - Insurance Policy Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsurancePolicyProductsPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created insurance policy product
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /insurancePolicyProducts/{id}:
+    get:
+      summary: Get an insurance policy product
+      tags:
+        - Insurance Policy Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Insurance Policy Product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsurancePolicyProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      summary: Update an insurance policy product
+      tags:
+        - Insurance Policy Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsurancePolicyProductPut'
+        required: true
+      responses:
+        '200':
+          description: Updated insurance policy product details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsurancePolicyProductGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    delete:
+      summary: Delete an insurance policy product
+      tags:
+        - Insurance Policy Product
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Insurance policy product deleted
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /insurancePolicies:
+    get:
+      summary: List all insurance policies
+      tags:
+        - Insurance Policy
+      parameters:
+        - name: bankAccountId
+          in: query
+          description: Search pnsurance policies by Bank Account
+          schema:
+            type: string
+            example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+      responses:
+        '200':
+          description: A list of insurance policies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsurancePoliciesGet'
+    post:
+      summary: Create an insurance policy
+      tags:
+        - Insurance Policy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsurancePoliciesPost'
+        required: true
+      responses:
+        '201':
+          description: Id of the created insurance policy
+          $ref: '#/components/responses/ResourceCreationReponse'
+
+  /insurancePolicies/{id}:
+    get:
+      summary: Get an insurance policy
+      tags:
+        - Insurance Policy
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Insurance Policy details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InsurancePolicyGet'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+  /insurancePolicies/{id}/action:
+    post:
+      summary: Perform an action on an insurance policy
+      tags:
+        - Insurance Policy
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InsurancePolicyActionPost'
+        required: true
+      responses:
+        '200':
+          $ref: '#/components/responses/ActionPostSuccessResponse'
+        '400':
+          $ref: '#/components/responses/ActionPostBadRequestResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+
+components:
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      description: Resource id
+      required: true
+      schema:
+        type: string
+        example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        status_code:
+          type: string
+          example: 400
+        message:
+          type: string
+          example: "You have encountered an exception!"
+        type:
+          type: string
+          example: "ExceptionType"
+
+    Token:
+      type: object
+      required:
+        - access_token
+        - refresh_token
+        - token_type
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDA1MzRkNS03YWFjLTRkZTItOWI5NS1mYzY1YjI2NWZjZjYiLCJpYXQiOjE3NDM4NjM5MzQsImV4cCI6MTc0Mzg2NTczNH0.5vBRno5WxCqO310HEpmPysZGPOnWfipu14c5pID3WBo
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDA1MzRkNS03YWFjLTRkZTItOWI5NS1mYzY1YjI2NWZjZjYiLCJpYXQiOjE3NDM4NjM5MzQsImV4cCI6MTc0Mzg2NTczNH0.5vBRno5WxCqO310HEpmPysZGPOnWfipu14c5pID3WBo
+        token_type:
+          type: string
+          example: Bearer
+
+    LoginPost:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: "m.rossi@email.com"
+        password:
+          type: string
+          example: password123
+
+    BanksGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/BankGet"
+    
+    BanksPost:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Multiversity Bank"
+        address:
+          type: string
+          example: "Via Roma 10, Napoli"
+        phone:
+          type: string
+          example: "0812345678"
+
+    BankGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/BanksPost'
+        - type: object
+          properties:
+            swiftCode:
+              type: string
+              minLength: 8
+              maxLength: 11
+              example: "ABCDEF0GXXX"
+              readOnly: true
+
+    BankPut:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Multiversity Bank"
+
+    UserProfilesGet:
+      type: array
+      items:
+        allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+            lastLogin:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+            email:
+              type: string
+              example: "m.rossi@email.com"
+
+    UserProfilesPost:
+      type: object
+      required:
+        - name
+        - surname
+        - email
+        - password
+        - taxIdentificationNumber
+      properties:
+        name:
+          type: string
+          example: "Mario"
+        surname:
+          type: string
+          example: "Rossi"
+        email:
+          type: string
+          example: "m.rossi@email.com"
+        password:
+          type: string
+          example: "averycomplexpassword"
+        taxIdentificationNumber:
+          type: string
+          minLength: 16
+          maxLength: 16
+          example: "RSSMRA80A01H501U"
+        birthDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+        birthCountry:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "ITA"
+        birthState:
+          type: string
+          minLength: 2
+          maxLength: 2
+          example: "RM"
+        birthCity:
+          type: string
+          example: "Roma"
+
+    UserProfileGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/UserProfilesPost'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+            lastLogin:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+
+    UserProfilePut:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "m.rossi@email.com"
+
+    BankAccountsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/BankAccountGet"
+
+    BankAccountsPost:
+      type: object
+      required:
+        - bankId
+        - currency
+      properties:
+        bankId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        currency:
+          type: string
+          description: ISO 4217 currency code
+          example: "EUR"
+          default: "EUR"
+
+    BankAccountGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/BankAccountsPost'
+        - type: object
+          properties:
+            ibanCode:
+              type: string
+              minLength: 10
+              maxLength: 34
+              example: "IT00X0000000000000000123456"
+              readOnly: true
+            accountNumber:
+              type: string
+              minLength: 10
+              maxLength: 10
+              example: "A123456789"
+              readOnly: true
+            balance:
+              type: number
+              example: 5000.00
+              readOnly: true
+            createdAt:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+            userProfileId:
+              type: string
+              example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+              readOnly: true
+
+    BankAccountPut:
+      type: object
+      properties:
+        bankId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        currency:
+          type: string
+          description: ISO 4217 currency code
+          example: "EUR"
+
+    TransactionsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/TransactionGet"
+
+    TransactionsPost:
+      type: object
+      required:
+        - amount
+        - description
+        - type
+        - sourceAccountId
+        - destinationAccountId
+      properties:
+        amount:
+          type: number
+          example: 100.00
+        description:
+          type: string
+          example: "University fees"
+        type:
+          type: string
+          enum: 
+            - Withdraw
+            - Transfer
+            - Deposit
+          description: Type of the transaction
+          example: "Transfer"
+          default: "Transfer"
+        fee:
+          type: number
+          description: Fee applied to the transaction
+          example: 0.00
+          default: 0.00
+        sourceAccountId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        destinationAccountId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+
+    TransactionGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/TransactionsPost'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+              example: "1980-01-01T00:00:00Z"
+              readOnly: true
+
+    InvestmentProductsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/InvestmentProductGet"
+    
+    InvestmentProductsPost:
+      type: object
+      required:
+        - name
+        - rate
+        - type
+      properties:
+        name:
+          type: string
+          example: "S&P 500"
+        rate:
+          type: number
+          example: 10.00
+        type:
+          type: string
+          enum:
+            - Action
+            - ETF
+            - Fund
+            - Bond
+            - Crypto
+            - RawMaterials
+          description: Type of the investment
+          example: "ETF"
+
+    InvestmentProductGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/InvestmentProductsPost'
+
+    InvestmentProductPut:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "S&P 500"
+        rate:
+          type: number
+          example: 10.00
+
+    InvestmentsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/InvestmentGet"
+
+    InvestmentsPost:
+      type: object
+      required:
+        - amount
+        - endDate
+        - investmentProductId
+        - bankAccountId
+      properties:
+        amount:
+          type: number
+          example: 10000.00
+        startDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+          readOnly: true
+        endDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+        investmentProductId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        bankAccountId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+
+    InvestmentGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/InvestmentsPost'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - ACTIVE
+                - CLOSED
+              description: Current status of the investment
+              example: "ACTIVE"
+              readOnly: true
+
+    InvestmentActionPost:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum:
+            - activate
+            - close
+          description: Action to perform on the investment
+          example: "close"
+
+    LoanProductsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/LoanProductGet"
+    
+    LoanProductsPost:
+      type: object
+      required:
+        - name
+        - rate
+        - type
+      properties:
+        name:
+          type: string
+          example: "Car Loan"
+        rate:
+          type: number
+          example: 10.00
+        type:
+          type: string
+          enum:
+            - PersonalLoan
+            - HomeMortgage
+            - CreditCard
+          description: Type of the loan
+          example: "PersonalLoan"
+
+    LoanProductGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/LoanProductsPost'
+
+    LoanProductPut:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Car Loan"
+        rate:
+          type: number
+          example: 10.00
+
+    LoansGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/LoanGet"
+
+    LoansPost:
+      type: object
+      required:
+        - amount
+        - endDate
+        - loanProductId
+        - bankAccountId
+      properties:
+        amount:
+          type: number
+          example: 10000.00
+        startDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+          readOnly: true
+        endDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+        loanProductId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        bankAccountId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+
+    LoanGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/LoansPost'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - ACTIVE
+                - CLOSED
+              description: Current status of the loan
+              example: "ACTIVE"
+              readOnly: true
+
+    InsurancePolicyProductsGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/InsurancePolicyProductGet"
+
+    InsurancePolicyProductsPost:
+      type: object
+      required:
+        - name
+        - annualPremium
+        - coverageCap
+        - type
+      properties:
+        name:
+          type: string
+          example: "Citycar Insurance 1y"
+        annualPremium:
+          type: number
+          example: 600.00
+        coverageCap:
+          type: number
+          example: 700000.00
+        type:
+          type: string
+          enum:
+            - Car
+            - Life
+            - Home
+          description: Type of the insurance policy
+          example: "Car"
+
+    InsurancePolicyProductGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/InsurancePolicyProductsPost'
+
+    InsurancePolicyProductPut:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Citycar Insurance 1y"
+        annualPremium:
+          type: number
+          example: 600.00
+        coverageCap:
+          type: number
+          example: 700000.00
+
+    InsurancePoliciesGet:
+      type: array
+      items:
+        $ref: "#/components/schemas/InsurancePolicyGet"
+
+    InsurancePoliciesPost:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - insurancePolicyProductId
+        - bankAccountId
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+        endDate:
+          type: string
+          format: date-time
+          example: "1980-01-01T00:00:00Z"
+        insurancePolicyProductId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        bankAccountId:
+          type: string
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+
+    InsurancePolicyGet:
+      allOf:
+        - $ref: '#/components/schemas/ResourcePostResponse'
+        - $ref: '#/components/schemas/InsurancePoliciesPost'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: 
+                - ACTIVE
+                - SUSPENDED
+                - TERMINATED
+              description: Current status of the insurance policy
+              example: "ACTIVE"
+              readOnly: true
+
+    InsurancePolicyActionPost:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum:
+            - suspend
+            - reactivate
+          description: Action to perform on the insurance policy
+          example: "suspend"
+
+    ResourcePostResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Id of the created resource
+          example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+          readOnly: true
+
+  responses:
+    ResourceCreationReponse:
+      description: Base resource creation response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourcePostResponse'
+
+    ResourceNotFoundResponse:
+      description: Resource not found response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Resource with id {id} not found.'
+
+    ActionPostSuccessResponse:
+      description: Action successfully performed response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Action {action} successfully performed on resource {id}.'
+
+    ActionPostBadRequestResponse:
+      description: Action successfully performed response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Invalid action {action} specified. Please check and try again.'
+
+security:
+  - bearerAuth: []
