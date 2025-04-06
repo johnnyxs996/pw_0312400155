@@ -89,6 +89,7 @@ paths:
   /banks:
     get:
       summary: List all banks
+      security: []
       tags:
         - Bank
       responses:
@@ -401,6 +402,7 @@ paths:
   /investmentProducts:
     get:
       summary: List all investment products
+      security: []
       tags:
         - Investment Product
       responses:
@@ -549,6 +551,7 @@ paths:
   /loanProducts:
     get:
       summary: List all loan products
+      security: []
       tags:
         - Loan Product
       responses:
@@ -676,6 +679,7 @@ paths:
   /insurancePolicyProducts:
     get:
       summary: List all insurance policy products
+      security: []
       tags:
         - Insurance Policy Product
       responses:
