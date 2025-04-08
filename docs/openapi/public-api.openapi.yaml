@@ -74,6 +74,7 @@ paths:
       summary: Perform logout
       tags:
         - Auth
+      security: []
       responses:
         "200":
           description: Logout message
