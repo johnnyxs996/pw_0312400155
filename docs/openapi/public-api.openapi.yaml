@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: UniPegaso Banking API
   description: API for managing UniPegaso Banking financial system.
-  version: 1.0.0
+  version: 1.1.0
 
 servers:
   - url: https://localhost/api/v1
@@ -93,6 +93,9 @@ paths:
       security: []
       tags:
         - Bank
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of banks
@@ -169,6 +172,9 @@ paths:
       summary: List all user profiles
       tags:
         - User Profile
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of user profiles
@@ -247,6 +253,8 @@ paths:
         - User Bank Account
       parameters:
         - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of user bank accounts
@@ -280,6 +288,9 @@ paths:
       summary: List all bank accounts
       tags:
         - Bank Account
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of bank accounts
@@ -361,6 +372,8 @@ paths:
           schema:
             type: string
             example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of transactions
@@ -406,6 +419,9 @@ paths:
       security: []
       tags:
         - Investment Product
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of investment products
@@ -489,6 +505,8 @@ paths:
           schema:
             type: string
             example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of investments
@@ -555,6 +573,9 @@ paths:
       security: []
       tags:
         - Loan Product
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of loan products
@@ -638,6 +659,8 @@ paths:
           schema:
             type: string
             example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of loans
@@ -683,6 +706,9 @@ paths:
       security: []
       tags:
         - Insurance Policy Product
+      parameters:
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of insurance policy products
@@ -762,10 +788,12 @@ paths:
       parameters:
         - name: bankAccountId
           in: query
-          description: Search pnsurance policies by Bank Account
+          description: Search insurance policies by Bank Account
           schema:
             type: string
             example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+        - $ref: '#/components/parameters/PageQueryParam'
+        - $ref: '#/components/parameters/CountQueryParam'
       responses:
         '200':
           description: A list of insurance policies
@@ -836,6 +864,24 @@ components:
       schema:
         type: string
         example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+    
+    PageQueryParam:
+      name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: number
+        example: 1
+
+    CountQueryParam:
+      name: count
+      in: query
+      description: Count number
+      required: false
+      schema:
+        type: number
+        example: 10
 
   securitySchemes:
     bearerAuth:
@@ -887,10 +933,35 @@ components:
           type: string
           example: password123
 
+    PaginatedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        total:
+          type: number
+          example: 50
+        page:
+          type: number
+          example: 1
+        size:
+          type: number
+          example: 10
+        pages:
+          type: number
+          example: 5
+
     BanksGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/BankGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/BankGet"
     
     BanksPost:
       type: object
@@ -928,25 +999,35 @@ components:
           example: "Multiversity Bank"
 
     UserProfilesGet:
-      type: array
-      items:
-        allOf:
-        - $ref: '#/components/schemas/ResourcePostResponse'
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
         - type: object
           properties:
-            createdAt:
-              type: string
-              format: date-time
-              example: "1980-01-01T00:00:00Z"
-              readOnly: true
-            lastLogin:
-              type: string
-              format: date-time
-              example: "1980-01-01T00:00:00Z"
-              readOnly: true
-            email:
-              type: string
-              example: "m.rossi@email.com"
+            items:
+              type: array
+              items:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ResourcePostResponse'
+                  - type: object
+                    properties:
+                      userId:
+                        type: string
+                        format: string
+                        example: "112d3e8b-a401-4868-a902-c0ac0736855c"
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "1980-01-01T00:00:00Z"
+                        readOnly: true
+                      lastLogin:
+                        type: string
+                        format: date-time
+                        example: "1980-01-01T00:00:00Z"
+                        readOnly: true
+                      email:
+                        type: string
+                        example: "m.rossi@email.com"
 
     UserProfilesPost:
       type: object
@@ -1017,9 +1098,14 @@ components:
           example: "m.rossi@email.com"
 
     BankAccountsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/BankAccountGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/BankAccountGet"
 
     BankAccountsPost:
       type: object
@@ -1080,9 +1166,14 @@ components:
           example: "EUR"
 
     TransactionsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/TransactionGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/TransactionGet"
 
     TransactionsPost:
       type: object
@@ -1133,9 +1224,14 @@ components:
               readOnly: true
 
     InvestmentProductsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/InvestmentProductGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/InvestmentProductGet"
     
     InvestmentProductsPost:
       type: object
@@ -1178,9 +1274,14 @@ components:
           example: 10.00
 
     InvestmentsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/InvestmentGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/InvestmentGet"
 
     InvestmentsPost:
       type: object
@@ -1238,9 +1339,14 @@ components:
           example: "close"
 
     LoanProductsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/LoanProductGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/LoanProductGet"
     
     LoanProductsPost:
       type: object
@@ -1280,9 +1386,14 @@ components:
           example: 10.00
 
     LoansGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/LoanGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/LoanGet"
 
     LoansPost:
       type: object
@@ -1327,9 +1438,14 @@ components:
               readOnly: true
 
     InsurancePolicyProductsGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/InsurancePolicyProductGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/InsurancePolicyProductGet"
 
     InsurancePolicyProductsPost:
       type: object
@@ -1376,9 +1492,14 @@ components:
           example: 700000.00
 
     InsurancePoliciesGet:
-      type: array
-      items:
-        $ref: "#/components/schemas/InsurancePolicyGet"
+      allOf:
+        - $ref: '#/components/schemas/PaginatedResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: "#/components/schemas/InsurancePolicyGet"
 
     InsurancePoliciesPost:
       type: object
