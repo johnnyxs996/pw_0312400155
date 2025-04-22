@@ -2,13 +2,13 @@ openapi: 3.0.0
 info:
   title: UniPegaso Banking API
   description: API for managing UniPegaso Banking financial system.
-  version: 1.1.0
+  version: 1.2.0
 
 servers:
   - url: https://localhost/api/v1
 
 paths:
-  /login:
+  /auth/login:
     post:
       summary: Authenticate user
       tags:
@@ -18,7 +18,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginPost'
+              $ref: '#/components/schemas/AuthCredentials'
         required: true
       responses:
         '200':
@@ -26,66 +26,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
-        '400':
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Invalid credentials'
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Unauthorized
 
-  /refresh:
+  /auth/refresh:
     post:
       summary: Refresh access token
       tags:
         - Auth
       security: []
-      parameters:
-        - name: refresh_token
-          in: query
-          description: Refresh token value
-          schema:
-            type: string
-            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDA1MzRkNS03YWFjLTRkZTItOWI5NS1mYzY1YjI2NWZjZjYiLCJpYXQiOjE3NDM4NjM5MzQsImV4cCI6MTc0Mzg2NTczNH0.5vBRno5WxCqO310HEpmPysZGPOnWfipu14c5pID3WBo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshCredentials'
+        required: true
       responses:
         '200':
           description: Successful refresh
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
-        '400':
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: 'Invalid credentials'
-
-  /logout:
-    post:
-      summary: Perform logout
-      tags:
-        - Auth
-      security: []
-      responses:
-        "200":
-          description: Logout message
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Logged out successfully"
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Unauthorized
 
   /banks:
     get:
@@ -117,6 +82,8 @@ paths:
         '201':
           description: Id of the created bank
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /banks/{id}:
     get:
@@ -132,6 +99,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -153,6 +122,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -164,6 +135,8 @@ paths:
       responses:
         '204':
           description: Bank deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -182,6 +155,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfilesGet'
+        '401':
+          description: Unauthorized
     post:
       summary: Create a user profile
       tags:
@@ -196,6 +171,8 @@ paths:
         '201':
           description: Id of the created user profile
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /userProfiles/{id}:
     get:
@@ -211,6 +188,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfileGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -232,6 +211,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserProfileGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -243,6 +224,8 @@ paths:
       responses:
         '204':
           description: User profile deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -262,6 +245,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankAccountsGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     post:
@@ -280,6 +265,8 @@ paths:
         '201':
           description: Id of the created user bank account
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -298,6 +285,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankAccountsGet'
+        '401':
+          description: Unauthorized
 
   /bankAccounts/{id}:
     get:
@@ -313,6 +302,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankAccountGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -334,6 +325,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BankAccountGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -345,6 +338,8 @@ paths:
       responses:
         '204':
           description: Bank account deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -381,6 +376,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionsGet'
+        '401':
+          description: Unauthorized
     post:
       summary: Create a transaction
       tags:
@@ -395,6 +392,8 @@ paths:
         '201':
           description: Id of the created transaction
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /transactions/{id}:
     get:
@@ -410,6 +409,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -443,6 +444,8 @@ paths:
         '201':
           description: Id of the created investment product
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /investmentProducts/{id}:
     get:
@@ -458,6 +461,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -479,6 +484,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -490,6 +497,8 @@ paths:
       responses:
         '204':
           description: Investment product deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -514,6 +523,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentsGet'
+        '401':
+          description: Unauthorized
     post:
       summary: Create an investment
       tags:
@@ -528,6 +539,8 @@ paths:
         '201':
           description: Id of the created investment
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /investments/{id}:
     get:
@@ -543,6 +556,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvestmentGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -564,6 +579,8 @@ paths:
           $ref: '#/components/responses/ActionPostSuccessResponse'
         '400':
           $ref: '#/components/responses/ActionPostBadRequestResponse'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -597,6 +614,8 @@ paths:
         '201':
           description: Id of the created loan product
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /loanProducts/{id}:
     get:
@@ -612,6 +631,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoanProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -633,6 +654,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoanProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -644,6 +667,8 @@ paths:
       responses:
         '204':
           description: Loan product deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -668,6 +693,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoansGet'
+        '401':
+          description: Unauthorized
     post:
       summary: Create a loan
       tags:
@@ -682,6 +709,8 @@ paths:
         '201':
           description: Id of the created loan
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /loans/{id}:
     get:
@@ -697,6 +726,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoanGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -730,6 +761,8 @@ paths:
         '201':
           description: Id of the created insurance policy product
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /insurancePolicyProducts/{id}:
     get:
@@ -745,6 +778,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InsurancePolicyProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     put:
@@ -766,6 +801,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InsurancePolicyProductGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
     delete:
@@ -777,6 +814,8 @@ paths:
       responses:
         '204':
           description: Insurance policy product deleted
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -801,6 +840,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InsurancePoliciesGet'
+        '401':
+          description: Unauthorized
     post:
       summary: Create an insurance policy
       tags:
@@ -815,6 +856,8 @@ paths:
         '201':
           description: Id of the created insurance policy
           $ref: '#/components/responses/ResourceCreationReponse'
+        '401':
+          description: Unauthorized
 
   /insurancePolicies/{id}:
     get:
@@ -830,6 +873,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InsurancePolicyGet'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -851,6 +896,8 @@ paths:
           $ref: '#/components/responses/ActionPostSuccessResponse'
         '400':
           $ref: '#/components/responses/ActionPostBadRequestResponse'
+        '401':
+          description: Unauthorized
         '404':
           $ref: '#/components/responses/ResourceNotFoundResponse'
 
@@ -904,7 +951,7 @@ components:
           type: string
           example: "ExceptionType"
 
-    Token:
+    TokenResponse:
       type: object
       required:
         - access_token
@@ -921,7 +968,7 @@ components:
           type: string
           example: Bearer
 
-    LoginPost:
+    AuthCredentials:
       type: object
       required:
         - email
@@ -933,6 +980,15 @@ components:
         password:
           type: string
           example: password123
+
+    RefreshCredentials:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDA1MzRkNS03YWFjLTRkZTItOWI5NS1mYzY1YjI2NWZjZjYiLCJpYXQiOjE3NDM4NjM5MzQsImV4cCI6MTc0Mzg2NTczNH0.5vBRno5WxCqO310HEpmPysZGPOnWfipu14c5pID3WBo
 
     PaginatedResponse:
       type: object
@@ -1596,7 +1652,7 @@ components:
                 example: 'Action {action} successfully performed on resource {id}.'
 
     ActionPostBadRequestResponse:
-      description: Action successfully performed response
+      description: Bad action specified
       content:
         application/json:
           schema:
