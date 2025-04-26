@@ -1636,7 +1636,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1520,
+											"left": 1472,
 											"top": -368,
 											"height": 13
 										},
@@ -1663,7 +1663,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1520,
+											"left": 1472,
 											"top": -368,
 											"width": 73.67724609375,
 											"height": 13,
@@ -1678,7 +1678,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1520,
+											"left": 1472,
 											"top": -368,
 											"height": 13,
 											"horizontalAlignment": 1
@@ -1797,7 +1797,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"parentStyle": true,
-											"left": 1045,
+											"left": 997,
 											"top": 506,
 											"width": 199,
 											"height": 13,
@@ -1839,12 +1839,32 @@
 									"model": {
 										"$ref": "AAAAAAGVpdrB5dp/RQ0="
 									},
+									"subViews": [
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGWckvNAtY3rhA=",
+											"_parent": {
+												"$ref": "AAAAAAGVpdrB5dqIIw0="
+											},
+											"model": {
+												"$ref": "AAAAAAGWckvM+dYxZME="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1045,
+											"top": 529,
+											"width": 199,
+											"height": 13,
+											"text": "+performAction(action: Action)",
+											"horizontalAlignment": 0
+										}
+									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
 									"left": 1040,
 									"top": 524,
 									"width": 209,
-									"height": 10
+									"height": 23
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -1858,7 +1878,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 760,
+									"left": 736,
 									"top": -184,
 									"width": 10,
 									"height": 10
@@ -1875,7 +1895,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": true,
-									"left": 760,
+									"left": 736,
 									"top": -184,
 									"width": 10,
 									"height": 10
@@ -2667,12 +2687,32 @@
 									"model": {
 										"$ref": "AAAAAAGVpfXW9HFwsPk="
 									},
+									"subViews": [
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGWckxq+ODVEO4=",
+											"_parent": {
+												"$ref": "AAAAAAGVpfXW9XF5DVw="
+											},
+											"model": {
+												"$ref": "AAAAAAGWckxq8ODP1TQ="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1045,
+											"top": 786,
+											"width": 199,
+											"height": 13,
+											"text": "+performAction(action: Action)",
+											"horizontalAlignment": 0
+										}
+									],
 									"font": "Arial;13;0",
 									"parentStyle": true,
 									"left": 1040,
 									"top": 781,
 									"width": 209,
-									"height": 10
+									"height": 23
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -9335,6 +9375,27 @@
 							"name": "status",
 							"type": "InvestmentStatus"
 						}
+					],
+					"operations": [
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGWckvM+dYxZME=",
+							"_parent": {
+								"$ref": "AAAAAAGVpdrB5dp/RQ0="
+							},
+							"name": "performAction",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGWckwJENbdnc4=",
+									"_parent": {
+										"$ref": "AAAAAAGWckvM+dYxZME="
+									},
+									"name": "action",
+									"type": "Action"
+								}
+							]
+						}
 					]
 				},
 				{
@@ -9632,6 +9693,27 @@
 							},
 							"name": "status",
 							"type": "InsurancePolicyStatus"
+						}
+					],
+					"operations": [
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGWckxq8ODP1TQ=",
+							"_parent": {
+								"$ref": "AAAAAAGVpfXW9HFwsPk="
+							},
+							"name": "performAction",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGWckymBuF7OuM=",
+									"_parent": {
+										"$ref": "AAAAAAGWckxq8ODP1TQ="
+									},
+									"name": "action",
+									"type": "Action"
+								}
+							]
 						}
 					]
 				},
