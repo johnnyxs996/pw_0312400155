@@ -1,8 +1,8 @@
 [submodule "back-end"]
 	path = back-end
-	url = https://github.com/johnnyxs996/pw_0312400155_be.git
+	url = https://github.com/giovanni-f-96/pw_0312400155_be.git
 	branch = main
 [submodule "front-end"]
 	path = front-end
-	url = https://github.com/johnnyxs996/pw_0312400155_fe.git
+	url = https://github.com/giovanni-f-96/pw_0312400155_fe.git
 	branch = main
