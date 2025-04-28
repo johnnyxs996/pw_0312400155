@@ -3,7 +3,7 @@ services:
     build:
       context: ./back-end
       dockerfile: Dockerfile
-    container_name: pw_back-end
+    container_name: pw-back_end
     # ports:
     #   - 8080:8080
     #   - 5678:5678
@@ -17,14 +17,23 @@ services:
       - ./envs/local
     command: [ "-start" ]
     # command: [ "-start-debug" ]
+  
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: pw-front_end
+    volumes:
+      - front-end-dist:/app/dist/front-end/browser
 
   nginx:
     image: nginx:1.27
-    container_name: pw_nginx
+    container_name: pw-nginx
     ports:
       - 80:80
       - 443:443
     volumes:
+      - front-end-dist:/usr/share/nginx/html
       - ./nginx/nginx.conf:/etc/nginx/conf.d/pw.conf
       - ./nginx/certs:/etc/nginx/certs
     depends_on:
@@ -33,7 +42,7 @@ services:
 
   db:
     image: postgres:17
-    container_name: pw_db
+    container_name: pw-db
     expose:
       - 5432
     env_file:
@@ -44,3 +53,6 @@ services:
     restart: always
     ports:
       - 8081:8080
+
+volumes:
+  front-end-dist:
